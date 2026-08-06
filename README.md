@@ -11,6 +11,8 @@ npm run dev
 
 访问 <http://localhost:6000>。
 
+公开页面：<https://wadecheung-sys.github.io/test/>
+
 ## 构建
 
 ```bash
