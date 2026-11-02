@@ -1,11 +1,13 @@
 {
-  "name": "tiny-focus-dashboard",
+  "name": "tangshan-port-energy",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0 --port 6000",
+    "dev": "vite --host 127.0.0.1 --port 5173",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 6000"
+    "preview": "vite preview --host 127.0.0.1 --port 5173",
+    "test": "node --test tests/domain.test.mjs"
   },
   "devDependencies": {
     "vite": "^7.1.0"

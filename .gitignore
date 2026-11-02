@@ -2,3 +2,11 @@ node_modules/
 dist/
 .vite/
 *.log
+
+# Local source evidence and generated QA intermediates
+planning/evidence/
+planning/extract.ps1
+planning/contact.ps1
+outputs/**/*.png
+outputs/**/*.ndjson
+tools/github-release.mjs

@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {deviceSeed} from '../src/data.js';
+import {periodDays,totalEnergy,energy,groupedEnergy,stationEnergy,lineLoss,carbon,health,nextMaintenanceStatus,csvText,cumulativeReading} from '../src/domain.js';
+test('按日汇总等于月总量，按单位拆分不重复累计',()=>{const dates=periodDays('月','2026-10-31');assert.equal(dates.length,31);const month=totalEnergy(deviceSeed,'月','2026-10-31');assert.equal(dates.reduce((s,date)=>s+totalEnergy(deviceSeed,'日',date),0),month);assert.equal(groupedEnergy(deviceSeed,'org','月','2026-10-31').reduce((s,x)=>s+x.value,0),month);assert.equal(carbon(month,.5306),month*.5306/1000);});
+test('线损分母为0或缺数时无有效率值，负差额保留',()=>{assert.equal(lineLoss(0,0),null);assert.equal(lineLoss(null,10),null);assert.equal(lineLoss(10,null),null);assert.deepEqual(lineLoss(100,90),{amount:10,rate:10});assert.equal(lineLoss(100,110).rate,-10);});
+test('配电室出线与所辖设备用量一致，独立计量子集为5台',()=>{const stations=stationEnergy(deviceSeed,'月','2026-10-31');assert.equal(deviceSeed.filter(x=>x.added).length,5);for(const s of stations){assert.equal(s.output,s.members.reduce((t,d)=>t+energy(d,'月','2026-10-31'),0));assert.equal(s.amount,s.input-s.output);assert(s.input>s.output);}});
+test('维护只有核验完成才计入完好；重复异常不重复扣减',()=>{const meters=[{id:'E1'},{id:'W1'}];const tasks=[{meter:'E1',status:'待处理'},{meter:'E1',status:'待核验'}];assert.equal(health(meters,tasks).rate,50);tasks.forEach(t=>t.status='已完成');assert.equal(health(meters,tasks).rate,100);assert.equal(nextMaintenanceStatus('处理中'),'待核验');assert.equal(nextMaintenanceStatus('已完成'),null);});
+test('闰年和非闰年日历正确，CSV防止公式注入',()=>{assert.equal(periodDays('月','2024-02-15').length,29);assert.equal(periodDays('月','2025-02-15').length,28);const csv=csvText(['名称'],[['=1+1'],['a,b"c']]);assert(csv.includes("'=1+1"));assert(csv.includes('a,b""c'));});
+test('表底差乘倍率与周期电量一致，年度不包含未到来的月份',()=>{const d=deviceSeed[0];const diff=(cumulativeReading(d,'2026-10-31')-cumulativeReading(d,'2026-09-30'))*d.multiplier;assert(Math.abs(diff-energy(d,'月','2026-10-31'))<0.001);assert.equal(periodDays('年','2026-10-31').at(-1),'2026-10-31');});

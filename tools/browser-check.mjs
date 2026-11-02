@@ -1,0 +1,24 @@
+import {chromium} from 'file:///C:/Users/wadec/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({headless:true,executablePath:'C:/Users/wadec/AppData/Local/ms-playwright/chromium-1228/chrome-win64/chrome.exe'});
+const context=await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+const base=process.argv[2]||'http://127.0.0.1:5173/';
+await page.goto(base);await page.locator('#login-form').waitFor();
+await page.locator('#login-account').fill('admin');await page.locator('#login-password').fill('wrong');await page.locator('.login-submit').click();assert((await page.locator('#login-error').innerText()).includes('错误'));
+await page.locator('#login-password').fill('123456');await page.locator('.login-submit').click();await page.locator('.sidebar').waitFor();
+await fs.mkdir('outputs/energy-planning/qa',{recursive:true});
+await page.screenshot({path:'outputs/energy-planning/qa/workbench.png',fullPage:true});
+const pages=JSON.parse(await fs.readFile('planning/pages.json','utf8'));
+for(const p of pages.filter(p=>p.route)){await page.goto(base+'#'+p.route);await page.locator('h1').waitFor();assert.equal(await page.locator('h1').innerText(),p.name);assert.equal(await page.locator('body').evaluate(el=>el.scrollWidth>window.innerWidth),false,'overflow '+p.route);}
+await page.goto(base+'#devices');await page.selectOption('#type','新增独立计量');assert.equal(await page.locator('tbody tr').count(),5);
+await page.locator('[data-action="device:EQ005"]').click();await page.locator('input[name=asset]').fill('TSG-2026-0005');await page.getByRole('button',{name:'保存资产关联'}).click();await page.reload();await page.locator('[data-action="device:EQ005"]').click();assert.equal(await page.locator('input[name=asset]').inputValue(),'TSG-2026-0005');await page.keyboard.press('Escape');
+await page.goto(base+'#maintenance');for(const next of ['受理并开始处理','提交修复核验','核验通过并完成']){await page.locator('[data-action="maintenance:WX2026102901"]').click();await page.locator('textarea[name=note]').fill('完成通讯模块检查与现场核验');await page.getByRole('button',{name:next,exact:true}).click();}assert((await page.locator('tbody').innerText()).includes('已完成'));
+await page.goto(base+'#factors');await page.locator('[data-action="factor:F01"]').click();await page.locator('input[name=value]').fill('0.54');await page.locator('textarea[name=reason]').fill('核验版本维护与历史记录联动');await page.getByRole('button',{name:'保存新版本'}).click();assert((await page.locator('body').innerText()).includes('0.5400'));
+await page.goto(base+'#push');await page.locator('[data-action="push:EQ003"]').click();await page.getByRole('button',{name:'重新提交',exact:true}).click();assert((await page.locator('.drawer').innerText()).includes('待发送'));await page.keyboard.press('Escape');
+await page.selectOption('#role','单位查看员');await page.goto(base+'#devices');assert.equal(await page.locator('tbody tr').count(),5);assert.equal(await page.locator('.nav-link[href="#users"]').count(),0);const download=page.waitForEvent('download');await page.getByRole('button',{name:'导出数据',exact:true}).click();assert((await download).suggestedFilename().includes('重点设备'));
+await page.goto(base+'#users');assert((await page.locator('main').innerText()).includes('当前角色无权'));
+await page.selectOption('#role','能源管理员');await page.goto(base+'#loss');await page.screenshot({path:'outputs/energy-planning/qa/line-loss.png',fullPage:true});
+await page.setViewportSize({width:1366,height:768});await page.goto(base+'#carbon');await page.screenshot({path:'outputs/energy-planning/qa/carbon.png',fullPage:true});
+await page.setViewportSize({width:390,height:844});await page.goto(base+'#overview');assert.equal(await page.locator('body').evaluate(el=>el.scrollWidth>innerWidth),false);await page.screenshot({path:'outputs/energy-planning/qa/mobile.png',fullPage:true});
+await page.getByRole('button',{name:'退出登录',exact:true}).click();await page.locator('#login-form').waitFor();await page.reload();await page.locator('#login-form').waitFor();await page.screenshot({path:'outputs/energy-planning/qa/login.png',fullPage:true});assert.deepEqual(errors,[]);console.log('PASS: 18 routes, 5 new devices, persistence, maintenance workflow, factor version, retry queue, role scope, export, 1366 and mobile layout.');await browser.close();
