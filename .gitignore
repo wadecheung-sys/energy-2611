@@ -2,6 +2,7 @@ node_modules/
 dist/
 .vite/
 *.log
+~$*
 
 # Local source evidence and generated QA intermediates
 planning/evidence/
