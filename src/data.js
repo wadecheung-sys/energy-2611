@@ -8,9 +8,9 @@ export const deviceSeed = Array.from({length:20},(_,i)=>({
 }));
 export const waterSeed = organizations.map((org,i)=>({id:`W${260001+i}`,name:`${org}生产供水总表`,org,status:i===1?'计量异常':'正常',reading:19632+i*3810,berth:'公共区域'}));
 export const factorSeed=[
- {id:'F01',name:'全国电力平均二氧化碳排放因子',region:'全国',value:0.5306,year:2023,unit:'kgCO₂/kWh',version:1,status:'核算采用',source:'生态环境部、国家统计局 公告2025年第47号',url:sourceUrl},
- {id:'F02',name:'河北省电力平均二氧化碳排放因子',region:'河北',value:0.6516,year:2023,unit:'kgCO₂/kWh',version:1,status:'备选',source:'生态环境部、国家统计局 公告2025年第47号',url:sourceUrl},
- {id:'F03',name:'华北区域电力平均二氧化碳排放因子',region:'华北',value:0.6361,year:2023,unit:'kgCO₂/kWh',version:1,status:'备选',source:'生态环境部、国家统计局 公告2025年第47号',url:sourceUrl}
+ {id:'F01',name:'全国电力平均二氧化碳排放因子',region:'全国',value:0.5306,year:2023,unit:'kgCO₂/kWh',version:1,source:'生态环境部、国家统计局 公告2025年第47号',url:sourceUrl},
+ {id:'F02',name:'河北省电力平均二氧化碳排放因子',region:'河北',value:0.6516,year:2023,unit:'kgCO₂/kWh',version:1,source:'生态环境部、国家统计局 公告2025年第47号',url:sourceUrl},
+ {id:'F03',name:'华北区域电力平均二氧化碳排放因子',region:'华北',value:0.6361,year:2023,unit:'kgCO₂/kWh',version:1,source:'生态环境部、国家统计局 公告2025年第47号',url:sourceUrl}
 ];
 export const maintenanceSeed=[
  {id:'WX2026102901',meter:'E260003',org:'矿石码头',device:'103号门机',fault:'采集通讯中断',level:'重要',status:'待处理',owner:'设备运维组',created:'2026-10-29 09:16',finished:'',history:[{time:'2026-10-29 09:16',text:'通讯超时，已生成维护记录'}]},
@@ -27,3 +27,10 @@ export const navGroups=[
 ];
 export const pageMeta=Object.fromEntries(navGroups.flatMap(([group,items])=>items.map(([id,title,icon])=>[id,{title,group,icon}])));
 export const roleAccess={'能源管理员':Object.keys(pageMeta),'设备运维员':['overview','devices','meters','maintenance','intake','push','loss','logs'],'单位查看员':['overview','energy','devices','meters','carbon','carbon-analysis','company-report','equipment-report','loss']};
+// 公司边界的活动数据集中维护；新增组织不会自动生成消费量。
+export const facilitySeed=[
+ {org:'一公司',electricity:860,water:330,diesel:.57,gas:135},
+ {org:'二公司',electricity:1070,water:410,diesel:.69,gas:170},
+ {org:'矿石码头',electricity:1280,water:490,diesel:.81,gas:205},
+ {org:'集装箱码头',electricity:1490,water:570,diesel:.93,gas:240}
+];

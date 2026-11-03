@@ -1,57 +1,45 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
+import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
-const {Workbook,SpreadsheetFile,FileBlob}=await import(pathToFileURL(path.join(os.homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs')));
-const root=path.resolve(import.meta.dirname,'..');
-const pages=JSON.parse((await fs.readFile(path.join(root,'planning/pages.json'),'utf8')).replace(/^\uFEFF/,''));
-const end=pages.length+7;
-const out=path.join(root,'outputs/energy-planning');await fs.mkdir(out,{recursive:true});
-const target=path.join(out,'能源平台页面规划与进展.xlsx');
-// 再次生成前按稳定ID保留用户意见及下一步决定，不覆盖人工讨论结果。
-const notes=new Map();
-try{await fs.access(target);const old=await SpreadsheetFile.importXlsx(await FileBlob.load(target));const values=old.worksheets.getItem('页面台账').getRange('A8:N200').values;for(const r of values){if(r[0])notes.set(r[0],[r[11],r[12]]);}}catch(e){if(e.code!=='ENOENT')throw e;}
-const wb=Workbook.create();const s=wb.worksheets.add('页面台账');const changes=wb.worksheets.add('讨论与变更');
-for(const sh of [s,changes]){sh.showGridLines=false;sh.getRange('A1:N50').format.font={name:'Microsoft YaHei',size:11,color:'#334D61'};sh.getRange('A1:N50').format.verticalAlignment='center';sh.tabColor='#146C94';}
-s.getRange('A1:N1').merge();s.getRange('A1').values=[['唐山港能源平台 页面规划与进展']];s.getRange('A1:N1').format={fill:'#173D57',font:{name:'Microsoft YaHei',size:17,bold:true,color:'#FFFFFF'},rowHeight:40};
-s.getRange('A2:N2').merge();s.getRange('A2').values=[['版本 0.1　2026-11-02　以业务表达为主；还原表示结构与操作思路复用，不表示像素一致或旧代码复用。']];s.getRange('A2:N2').format.rowHeight=30;
-s.getRange('A3:N3').merge();s.getRange('A3').values=[['后续按页面ID讨论并持续更新。L列填写您的意见，M列记录已决定的下一步；重新生成台账时保留这两列。']];s.getRange('A3:N3').format={fill:'#EAF4F8',rowHeight:30};
-s.getRange('A4:F4').values=[['页面总数',null,'已实现待评审',null,'部分实现',null]];
-s.getRange('B4').formulas=[[`=COUNTA(A8:A${end})`]];s.getRange('D4').formulas=[[`=COUNTIF(F8:F${end},"已实现待评审")`]];s.getRange('F4').formulas=[[`=COUNTIF(F8:F${end},"部分实现")`]];s.getRange('G4:L4').values=[['待规划',null,'还原',null,'新增',null]];
-s.getRange('H4').formulas=[[`=COUNTIF(F8:F${end},"待规划")`]];s.getRange('J4').formulas=[[`=COUNTIF(D8:D${end},"还原")`]];s.getRange('L4').formulas=[[`=COUNTIF(D8:D${end},"新增")`]];s.getRange('M4:N4').values=[['调整',null]];s.getRange('N4').formulas=[[`=COUNTIF(D8:D${end},"调整")`]];s.getRange('A4:N4').format={fill:'#F3F7FA',rowHeight:30};
-s.getRange('A5:N5').merge();s.getRange('A5').values=[['来源：2026年10月技术规格书4.2（R01—R12）；唐山港能源平台截图（S01—S51）；2026-11-01用户沟通。具体定位见每行依据。']];s.getRange('A5:N5').format={font:{size:10,color:'#718797'},rowHeight:28};
-const headers=['页面ID','一级菜单','页面名称','页面性质','需求对应','当前状态','旧成果依据','表达思路与本轮内容','下一步建议','当前边界或歧义','页面路径','用户意见','下一步决定','更新日期'];
-s.getRange('A7:N7').values=[headers];
-const rows=pages.map(p=>[p.id,p.group,p.name,p.kind,p.req,p.status,p.source,p.idea,p.next,p.limit,p.id==='P20'?'登录入口 /':p.route?'#'+p.route:'未建立',notes.get(p.id)?.[0]||'',notes.get(p.id)?.[1]||'',new Date('2026-11-02T00:00:00Z')]);s.getRange(`A8:N${7+rows.length}`).values=rows;
-const tab=s.tables.add(`A7:N${7+rows.length}`,true,'PageLedger');tab.showFilterButton=true;
-s.getRange('A7:N7').format={fill:'#146C94',font:{bold:true,color:'#FFFFFF'},rowHeight:32,wrapText:true};
-s.getRange(`A8:N${end}`).format={wrapText:true,rowHeight:84};s.getRange(`N8:N${end}`).setNumberFormat('yyyy-mm-dd');
-const widths=[10,16,22,12,20,20,32,48,40,48,24,36,36,16];widths.forEach((w,i)=>s.getRangeByIndexes(0,i,end,1).format.columnWidth=w);
-s.getRange(`L8:M${end}`).format.fill='#FFF8DE';
-s.getRange('D8:D200').dataValidation={rule:{type:'list',values:['还原','新增','调整']}};
-s.getRange('F8:F200').dataValidation={rule:{type:'list',values:['待规划','编码中','部分实现','已实现待评审','待调整','已确认','暂缓']}};
-s.getRange(`D8:D${end}`).conditionalFormats.add('containsText',{text:'新增',format:{fill:'#E6F2FA',font:{color:'#15688F'}}});
-s.getRange(`F8:F${end}`).conditionalFormats.add('containsText',{text:'部分实现',format:{fill:'#FFF1D8',font:{color:'#9B701D'}}});
-s.getRange(`F8:F${end}`).conditionalFormats.add('containsText',{text:'待规划',format:{fill:'#F0F2F4',font:{color:'#7C8992'}}});
-s.freezePanes.freezeRows(7);s.freezePanes.freezeColumns(3);
-changes.getRange('A1:G1').merge();changes.getRange('A1').values=[['讨论与变更记录']];changes.getRange('A1:G1').format={fill:'#173D57',font:{size:17,bold:true,color:'#FFFFFF'},rowHeight:40};
-changes.getRange('A2:G2').merge();changes.getRange('A2').values=[['已确认方向与仍需讨论事项分开记录。每轮评审后追加记录，不把页面完成等同于需求验收完成。']];changes.getRange('A2:G2').format={wrapText:true,rowHeight:35};
-changes.getRange('A4:G4').values=[['记录ID','日期','关联页面','事项','当前结论或建议','确认状态','下一步']];
-const records=[
- ['C01',new Date('2026-11-01'),'全部','工作目标','以表达业务思路为主，使用新建前端和灵活的集中数据','用户已确认','持续迭代页面与台账'],
- ['C02',new Date('2026-11-01'),'全部','页面性质台账','区分还原、新增、调整，允许视觉表达与旧截图有差异','用户已确认','按固定页面ID记录意见和决定'],
- ['C03',new Date('2026-11-01'),'P11','线损计算','同一计量边界进线减出线，线损率为差额除以进线','用户已说明','完善进出线明细及异常状态'],
- ['C04',new Date('2026-11-01'),'P03 P13','设备范围','重点用能设备全量视图，5台新增独立计量为子集','实施假设','用页面继续核对字段与业务关系'],
- ['C05',new Date('2026-11-01'),'P06—P08','碳核算范围','先表达购入电力核算，官方全国、河北、华北2023年电力因子内置','待讨论','补油气排放源、因子生效期和历史批次机制'],
- ['C06',new Date('2026-11-01'),'P14 P15 P17','配置深度','组织详情、角色菜单授权和菜单关系已有页面，部分编辑仍待补齐','待讨论','按实际使用优先级补充编辑'],
- ['C07',new Date('2026-11-01'),'P19—P27','旧功能保留范围','保留规划记录，不用空页面冒充完成','待讨论','选择下一轮优先还原的业务'],
- ['C08',new Date('2026-11-01'),'全部','首版实现','18个可访问页面；状态区分已实现待评审与部分实现','待评审','检查布局、交互和业务表达']
-];changes.getRange('A5:G12').values=records;changes.tables.add('A4:G12',true,'DecisionLog');changes.getRange('A4:G4').format={fill:'#146C94',font:{bold:true,color:'#FFFFFF'},wrapText:true,rowHeight:32};changes.getRange('A5:G12').format={wrapText:true,rowHeight:75};changes.getRange('B5:B12').setNumberFormat('yyyy-mm-dd');[12,16,20,22,66,20,48].forEach((w,i)=>changes.getRangeByIndexes(0,i,15,1).format.columnWidth=w);changes.freezePanes.freezeRows(4);
-wb.recalculate();
-const initial=s.getRange('D4').values[0][0];s.getRange('F8').values=[['待调整']];wb.recalculate();const changed=s.getRange('D4').values[0][0];if(changed!==initial-1)throw Error('状态统计重算失败');s.getRange('F8').values=[[pages[0].status]];wb.recalculate();
-console.log((await wb.inspect({kind:'region',sheetId:'页面台账',range:'A4:N4',maxChars:2500,tableMaxCols:14})).ndjson);
-const exported=await SpreadsheetFile.exportXlsx(wb);
-let savedTarget=target;
-try{await exported.save(target);}catch(e){if(e.code!=='EBUSY')throw e;savedTarget=path.join(out,'能源平台页面规划与进展-v0.2.xlsx');await exported.save(savedTarget);}
-for(const [sheetName,range,name] of [['页面台账','A1:N7','ledger-header'],['页面台账','A7:F14','ledger-preview'],['页面台账','G7:J13','ledger-details'],['讨论与变更','A1:G8','decisions-preview']]){const image=await wb.render({sheetName,range,scale:1.3});await fs.writeFile(path.join(out,name+'.png'),new Uint8Array(await image.arrayBuffer()));}
-console.log(savedTarget);
+const {SpreadsheetFile,FileBlob}=await import(pathToFileURL(path.join(os.homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs')));
+const root=path.resolve(import.meta.dirname,'..'),out=path.join(root,'outputs/energy-planning');
+const target=path.join(out,'能源平台页面规划与进展-v0.3.xlsx');
+const previous=path.join(out,'能源平台页面规划与进展-v0.2.xlsx');
+const source=process.argv[2]||await fs.access(target).then(()=>target).catch(()=>previous);
+const pages=JSON.parse(await fs.readFile(path.join(root,'planning/pages.json'),'utf8'));
+const baseline=JSON.parse(await fs.readFile(path.join(root,'planning/ledger-baseline.json'),'utf8'));
+const wb=await SpreadsheetFile.importXlsx(await FileBlob.load(source));
+const s=wb.worksheets.getItem('页面台账'),changes=wb.worksheets.getItem('讨论与变更');
+const originalNotes=s.getRange('L8:M34').values,originalSummary=s.getRange('A4:N4').formulas;
+const render=async(sheetName,range,name)=>{const img=await wb.render({sheetName,range,scale:1.5});await fs.writeFile(path.join(out,name+'.png'),new Uint8Array(await img.arrayBuffer()));};
+await render('页面台账','A7:J16','ledger-before');
+const values=s.getRange('A8:N200').values,conflicts=[];
+const keys=['id','group','name','kind','req','status','source','idea','next','limit'];
+for(const page of pages){const index=values.findIndex(r=>r[0]===page.id);if(index<0)throw Error('缺少页面ID '+page.id);const row=index+8;const old=baseline.find(p=>p.id===page.id);let changed=false;
+ for(let col=1;col<keys.length;col++){const key=keys[col],current=values[index][col];if(page[key]===old?.[key])continue;if(current!==old?.[key]&&current!==page[key]){conflicts.push({id:page.id,column:key,current,proposed:page[key]});continue;}s.getRangeByIndexes(row-1,col,1,1).values=[[page[key]]];changed=true;}
+ if(changed)s.getRange(`N${row}`).values=[[new Date('2026-11-02T00:00:00Z')]];
+}
+s.getRange('A2').values=[['版本 0.3　2026-11-03　已复核技术规格书4.2；页面状态表示前端实现进度，不等同生产验收。']];
+s.getRange('A3').values=[['按固定页面ID持续讨论；保留L列用户意见、M列下一步决定，其他列人工改动在增量更新时保留并报告冲突。']];
+const newRecords=[
+ ['C09',new Date('2026-11-02'),'P06—P17','4.2逐项复核','接入补表底/单位；公司报表补水油气；组织、角色范围与菜单配置补齐','已实现待评审','详见需求复核与因子核算设计.md；生产接口和现场实施另行验收'],
+ ['C10',new Date('2026-11-02'),'P08','因子状态与核算引用','取消全局核算采用；因子版本和引用规则分离，同能源/组织/日期唯一','设计建议待评审','确认地区口径、适用日期、是否多方案并行'],
+ ['C11',new Date('2026-11-02'),'P06 P07 P08','历史核算与生效期','跨版本周期按日拆分；发布后不覆盖旧批次；缺失项不按0处理','已实现待评审','确认正式审批、归档与重算规则'],
+ ['C12',new Date('2026-11-02'),'P06 P09','全港核算边界','已补公共用电和油气活动量结构，但油气因子未确认，完整总量显示待核算','待业务确认','确认排放源清单、官方适用因子及CO₂/CO₂e方法'],
+ ['C13',new Date('2026-11-02'),'P08','依据资料与新增入口','新增、草稿、发布、版本历史、来源链接和≤500KB本地附件可操作','已实现待评审','生产改接文件库与服务端事务校验'],
+ ['C14',new Date('2026-11-02'),'P20 全部','发布与生产部署区别','按用户要求公开评审入口与admin/123456；不等同规格书内网、信创和密码基线','用户要求已落实','正式工程接入认证、数据库、接口与内网部署'],
+ ['C15',new Date('2026-11-03'),'全部','面向用户的界面原则','业务界面只呈现任务、结果和必要规则；移除无效页脚及开发过程文案，详细说明折叠','用户已明确，已落实','后续迭代遵循界面内容原则.md']
+];
+const oldLog=changes.getRange('A5:G200').values;const table=changes.tables.items.find(t=>t.name==='DecisionLog')||changes.tables.items[0];
+const appended=newRecords.filter(r=>!oldLog.some(old=>old[0]===r[0]));
+if(appended.length){const first=oldLog.filter(r=>r[0]).length+5;table.rows.add(null,appended);const last=first+appended.length-1;changes.getRange(`A${first}:G${last}`).format={font:{name:'Microsoft YaHei',size:11,color:'#334D61'},wrapText:true,rowHeight:90,verticalAlignment:'center'};changes.getRange(`B${first}:B${last}`).setNumberFormat('yyyy-mm-dd');}
+wb.recalculate();assert.deepEqual(s.getRange('L8:M34').values,originalNotes);assert.deepEqual(s.getRange('A4:N4').formulas,originalSummary);
+console.log(JSON.stringify({source,summary:s.getRange('A4:N4').values,conflicts}));
+await (await SpreadsheetFile.exportXlsx(wb)).save(target);
+// Preserve unresolved manual conflicts as pending against the prior baseline.
+const nextBaseline=structuredClone(pages);for(const item of conflicts)nextBaseline.find(p=>p.id===item.id)[item.column]=baseline.find(p=>p.id===item.id)[item.column];
+await fs.writeFile(path.join(root,'planning/ledger-baseline.json'),JSON.stringify(nextBaseline,null,2)+'\n');
+await render('页面台账','A7:F17','ledger-preview');await render('页面台账','G12:J17','ledger-details');await render('讨论与变更','A13:G18','decisions-preview');
+console.log(target);
