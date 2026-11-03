@@ -1,6 +1,7 @@
+import {facilityDaily} from './business-domain.js';
 import {periodDays,dailyEnergy} from './domain.js';
 
-export const energyTypes = { electricity: ['购入电力','kWh','kgCO₂/kWh'], diesel: ['柴油','t','tCO₂/t'], gas: ['天然气','Nm³','kgCO₂/Nm³'] };
+export const energyTypes = { electricity: ['购入电力','kWh','kgCO₂/kWh'], diesel: ['柴油','t','tCO₂/t'], petrol: ['汽油','t','tCO₂/t'], gas: ['天然气','Nm³','kgCO₂/Nm³'] };
 export const validDate=value=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&!Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value;
 export function validUrl(value){try{return ['https:','http:'].includes(new URL(value).protocol);}catch{return false;}}
 export function versionState(f,date=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Shanghai'})){
@@ -47,9 +48,10 @@ export function activityRows(db,devices,orgs,period,date,{includeFacility=true}=
  const days=periodDays(period,date),rows=[];
  for(const day of days){for(const d of devices)rows.push({date:day,org:d.org,device:d.name,device_id:d.id,berth:d.berth,energy_type:'electricity',quantity:dailyEnergy(d,day),source:d.meter});
  if(includeFacility)for(const org of orgs){const base=db.facility.find(f=>f.org===org);if(!base)continue;const swing=1+(Number(day.slice(8))%5)*.03;
- rows.push({date:day,org,device:'公共生产及辅助用电',berth:'公共区域',energy_type:'electricity',quantity:Math.round(base.electricity*swing),source:'公共用电统计'});
- rows.push({date:day,org,device:'港内运输与辅助设备',berth:'公共区域',energy_type:'diesel',quantity:Number((base.diesel*swing).toFixed(3)),source:'燃料消耗台账'});
- rows.push({date:day,org,device:'后勤供热',berth:'公共区域',energy_type:'gas',quantity:Math.round(base.gas*swing),source:'天然气统计台账'});
+ rows.push({date:day,org,device:'公共生产及辅助用电',berth:'公共区域',energy_type:'electricity',quantity:facilityDaily(db,org,'electricity',day),source:'公共用电统计'});
+ rows.push({date:day,org,device:'港内运输与辅助设备',berth:'公共区域',energy_type:'diesel',quantity:facilityDaily(db,org,'diesel',day),source:'燃料消耗台账'});
+ rows.push({date:day,org,device:'后勤供热',berth:'公共区域',energy_type:'gas',quantity:facilityDaily(db,org,'gas',day),source:'天然气统计台账'});
+ const petrol=facilityDaily(db,org,'petrol',day);if(petrol>0)rows.push({date:day,org,device:'汽油用能设备',berth:'公共区域',energy_type:'petrol',quantity:petrol,source:'油品消耗台账'});
  }}return rows;
 }
 export function calculateCarbon(db,rows){

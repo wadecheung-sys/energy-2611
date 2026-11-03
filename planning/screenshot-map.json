@@ -1,0 +1,410 @@
+[
+  {
+    "source": "S01",
+    "route": "login",
+    "title": "登录",
+    "intent": "账号入口与登录状态",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S02",
+    "route": "dashboard",
+    "title": "综合大屏",
+    "intent": "运行指标、单位分布、维护关注、趋势与全屏",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留运行总览意图，非原图逐像素复刻"
+  },
+  {
+    "source": "S03",
+    "route": "overview",
+    "title": "工作台",
+    "intent": "港区分布与业务入口",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S04",
+    "route": "energy-summary",
+    "title": "能源概况",
+    "intent": "能源库存概况及电水油气汇总",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S05",
+    "route": "electricity-analysis",
+    "title": "用电分析",
+    "intent": "分单位用量、占比、同比环比与趋势",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S06",
+    "route": "water-analysis",
+    "title": "用水分析",
+    "intent": "分单位用量、占比、同比环比与趋势",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S07",
+    "route": "gas-analysis",
+    "title": "用气分析",
+    "intent": "分单位用量、占比、同比环比与趋势",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S08",
+    "route": "oil-analysis",
+    "title": "用油分析",
+    "intent": "分单位用量、占比、同比环比与趋势",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S09",
+    "route": "energy-flow",
+    "title": "能流分析",
+    "intent": "公司至单位的能源流向与明细入口",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S10",
+    "route": "energy-trend",
+    "title": "趋势分析",
+    "intent": "多单位勾选、自定义日期范围及能源趋势",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S11",
+    "route": "intensity",
+    "title": "单位能耗分析",
+    "intent": "作业量、单耗、定额及排放强度",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S12",
+    "route": "carbon-codes",
+    "title": "碳效码",
+    "intent": "设备二维码生成、下载及移动档案",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S13",
+    "route": "quota",
+    "title": "定额管理",
+    "intent": "实际用电与定额电量比较",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S14",
+    "route": "quota-settings",
+    "title": "定额设置",
+    "intent": "按单位、年度和设备类型新增及维护定额",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S15",
+    "route": "assessment",
+    "title": "考核结果",
+    "intent": "实际单耗、偏差和考核结果",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S16",
+    "route": "teams",
+    "title": "班组管理",
+    "intent": "班组新增、编辑、删除与负责人",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S17",
+    "route": "schedules",
+    "title": "班组排班",
+    "intent": "班组设备排班、冲突校验及跨日班次",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S18",
+    "route": "team-assessment",
+    "title": "班组考核",
+    "intent": "班次用电、作业量和定额考核",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S19",
+    "route": "unit-electricity",
+    "title": "用电报表",
+    "intent": "日月年统计；电含小时和累计表底，油保留五种来源",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S20",
+    "route": "unit-water",
+    "title": "用水报表",
+    "intent": "日月年统计；电含小时和累计表底，油保留五种来源",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S21",
+    "route": "unit-work",
+    "title": "作业量报表",
+    "intent": "日月年统计；电含小时和累计表底，油保留五种来源",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S22",
+    "route": "unit-oil",
+    "title": "用油报表",
+    "intent": "日月年统计；电含小时和累计表底，油保留五种来源",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S23",
+    "route": "unit-gas",
+    "title": "用气报表",
+    "intent": "日月年统计；电含小时和累计表底，油保留五种来源",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S24",
+    "route": "company-annual",
+    "title": "公司年度报表",
+    "intent": "设备年度12个月电量、折标煤及排放三列",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S25",
+    "route": "standard-comparison",
+    "title": "国标对比表",
+    "intent": "标准依据与限值配置，无依据不判断达标",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S26",
+    "route": "group-month",
+    "title": "集团月报表",
+    "intent": "公司能耗、吞吐量与月度强度",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S27",
+    "route": "group-comparable",
+    "title": "可比月报表",
+    "intent": "月度能耗矩阵及加权可比指标",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S28",
+    "route": "group-cumulative",
+    "title": "可比累计报表",
+    "intent": "逐月系数计算后累计可比指标",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S29",
+    "route": "group-detail",
+    "title": "可比详情报表",
+    "intent": "分能源折标、营业额及艘次强度",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S30",
+    "route": "calculation-energy",
+    "title": "能源计算数据",
+    "intent": "各能源实物量与折标煤计算底表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S31",
+    "route": "calculation-standard",
+    "title": "国标计算数据",
+    "intent": "分月能耗、预算与标准限值比较",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S32",
+    "route": "base-standard",
+    "title": "基础对国标",
+    "intent": "基础数据与标准依据对照",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "原页内容为空，按基础对标准的设计意图补充；不能确认旧公式"
+  },
+  {
+    "source": "S33",
+    "route": "alarms",
+    "title": "报警管理",
+    "intent": "报警等级、处理状态及关联维护流程",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S34",
+    "route": "users",
+    "title": "用户管理",
+    "intent": "角色、单位、手机、电话、备注与最后登录",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S35",
+    "route": "logs",
+    "title": "日志管理",
+    "intent": "操作与登录日志、查询及导出",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S36",
+    "route": "entry-oil",
+    "title": "油数据",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S37",
+    "route": "entry-gas",
+    "title": "气数据",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S38",
+    "route": "entry-electricity",
+    "title": "电数据",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S39",
+    "route": "entry-water",
+    "title": "水数据",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S40",
+    "route": "entry-throughput",
+    "title": "吞吐量",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S41",
+    "route": "entry-drycargo",
+    "title": "干散货",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S42",
+    "route": "entry-budget",
+    "title": "预算指标",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S43",
+    "route": "entry-revenue",
+    "title": "营业额数据",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S44",
+    "route": "entry-voyages",
+    "title": "艘次数据",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S45",
+    "route": "entry-coefficients",
+    "title": "公司系数",
+    "intent": "新增、编辑、删除、CSV模板与导入预览；保存联动报表",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "修正公式待确认；标准箱量按数量维护，不作为乘数"
+  },
+  {
+    "source": "S46",
+    "route": "green-monitor",
+    "title": "绿电监测",
+    "intent": "光伏风电运行参数及发电趋势",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S47",
+    "route": "green-solar",
+    "title": "光伏报表",
+    "intent": "设施能源报表；充电按年，储能区分充放电与SOC",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S48",
+    "route": "green-wind",
+    "title": "风电报表",
+    "intent": "设施能源报表；充电按年，储能区分充放电与SOC",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S49",
+    "route": "green-shore",
+    "title": "岸电报表",
+    "intent": "船舶接拆电台账、倍率计费、新增编辑及导入",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S50",
+    "route": "green-charging",
+    "title": "充电桩报表",
+    "intent": "设施能源报表；充电按年，储能区分充放电与SOC",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "保留可辨识业务结构；真实采集和后端规则另行验收"
+  },
+  {
+    "source": "S51",
+    "route": "green-storage",
+    "title": "储能报表",
+    "intent": "设施能源报表；充电按年，储能区分充放电与SOC",
+    "status": "页面已覆盖，待业务评审",
+    "boundary": "原页无明细，补充充放电差额与SOC，不能据此确认储能损耗"
+  }
+]

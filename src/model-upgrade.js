@@ -1,3 +1,4 @@
+import {initBusiness} from './business-store.js';
 import {factorSeed,organizations,pageMeta,facilitySeed} from './data.js';
 export function upgrade(db){
  db.orgs??=organizations.map((name,i)=>({id:'ORG00'+(i+1),name,parent:'唐山港集团',status:'启用'}));
@@ -12,6 +13,7 @@ export function upgrade(db){
   db.factorRules=[{id:'RULE01',energy_type:'electricity',org:'全部单位',family_id:'F01',effective_from:'2025-01-01',effective_to:'',reason:'初始购入电力核算方案，全国平均口径'}];
  }
  for(const f of db.factorVersions)delete f.status;
- db.schemaVersion=3;
+ if(db.devices&&db.roles)initBusiness(db);
+ db.schemaVersion=4;
  organizations.splice(0,organizations.length,...db.orgs.filter(o=>o.status==='启用').map(o=>o.name));
 }

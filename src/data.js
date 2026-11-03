@@ -1,3 +1,4 @@
+import {legacyPages} from './legacy-catalog.js';
 // 集中维护的业务样本，非生产运行记录；正式接入只替换数据服务层。
 export const sourceUrl = 'https://www.mee.gov.cn/xxgk2018/xxgk/xxgk01/202512/t20251231_1139517.html';
 export const organizations = ['一公司','二公司','矿石码头','集装箱码头'];
@@ -25,6 +26,7 @@ export const navGroups=[
  ['统计与对接',[['company-report','公司能耗报表','file'],['equipment-report','重点设备报表','file'],['loss','配电室线损','bolt'],['intake','数据接入','database'],['push','集团数据上报','send']]],
  ['系统管理',[['organizations','组织机构','tree'],['roles','角色权限','shield'],['users','用户管理','users'],['menus','菜单管理','grid'],['logs','操作记录','clock']]]
 ];
+for(const p of legacyPages){let group=navGroups.find(([name])=>name===p.group);if(!group){group=[p.group,[]];navGroups.push(group);}group[1].push([p.id,p.title,p.icon]);}
 export const pageMeta=Object.fromEntries(navGroups.flatMap(([group,items])=>items.map(([id,title,icon])=>[id,{title,group,icon}])));
 export const roleAccess={'能源管理员':Object.keys(pageMeta),'设备运维员':['overview','devices','meters','maintenance','intake','push','loss','logs'],'单位查看员':['overview','energy','devices','meters','carbon','carbon-analysis','company-report','equipment-report','loss']};
 // 公司边界的活动数据集中维护；新增组织不会自动生成消费量。

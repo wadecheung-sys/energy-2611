@@ -28,7 +28,7 @@ npm run preview
 - `src/model-upgrade.js`：兼容旧浏览器数据，旧手工因子迁移为草稿。
 - `src/store.js`：本地持久化与操作记录；生产接入时替换为服务接口。
 - `src/ui.js`：表格、图表、指标、状态和图标组件。
-- `src/main.js`：18个页面及关联交互。
+- `src/main.js`：核心页面与总布局；src/legacy.js及modules补充47个截图还原页面。
 - `planning/pages.json`：稳定页面ID及实现状态，是Excel更新输入。
 - `outputs/energy-planning/能源平台页面规划与进展.xlsx`：持续更新的页面台账与讨论记录。
 - `planning/本轮实现与后续衔接.md`：本轮边界、依据与后续安排。
@@ -55,4 +55,6 @@ npm run preview
 
 `npm run build` 输出静态文件到dist。通过 GitHub Actions 发布到 GitHub Pages，访问地址为 https://wadecheung-sys.github.io/energy-2611/ 。推送main会自动测试、构建和发布。客户原始截图和提取正文保留本地，不提交到公开仓库。
 
-页面台账最新版本为 outputs/energy-planning/能源平台页面规划与进展-v0.3.xlsx；此前版本保留。本轮核查和交接记录见 planning/需求复核与因子核算设计.md。
+页面台账最新版本为 outputs/energy-planning/能源平台页面规划与进展-v0.4.xlsx；此前版本保留。本轮核查和交接记录见 planning/需求复核与因子核算设计.md。
+
+旧系统51张截图逐项对应见 [复核记录](planning/旧系统51张截图复核与还原.md)，页面台账共66项（65个业务路由及登录）。新增计算测试和 tools/legacy-check.mjs 验证补录、考核、排班、岸电与二维码。
